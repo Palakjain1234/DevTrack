@@ -2,6 +2,7 @@ package com.devrelease.service;
 
 import com.devrelease.dto.request.DeploymentRequest;
 import com.devrelease.dto.request.StatusUpdateRequest;
+import com.devrelease.dto.response.ActivityItem;
 import com.devrelease.dto.response.DeploymentResponse;
 import com.devrelease.enums.DeploymentStatus;
 import com.devrelease.enums.NotificationType;
@@ -20,6 +21,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -121,6 +123,42 @@ public class DeploymentService {
     public DeploymentResponse getById(Long id) {
         return toResponse(deploymentRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Deployment not found")));
+    }
+
+    /**
+     * Merged, newest-first activity feed for a project.
+     * Combines recent deployments and releases into a single timeline (max 20 items).
+     */
+    public List<ActivityItem> getActivityFeed(Long projectId) {
+        List<ActivityItem> deploymentItems = deploymentRepository
+                .findRecentByProjectIds(List.of(projectId))
+                .stream()
+                .map(d -> new ActivityItem(
+                        "DEPLOYMENT",
+                        "Deploy #" + d.getId() + " \u2192 " + d.getRelease().getVersion()
+                                + " on " + d.getEnvironment().getName(),
+                        d.getStatus().name(),
+                        d.getId(),
+                        d.getStartedAt()
+                ))
+                .collect(Collectors.toList());
+
+        List<ActivityItem> releaseItems = releaseRepository.findByProjectId(projectId)
+                .stream()
+                .map(r -> new ActivityItem(
+                        "RELEASE",
+                        "Release " + r.getVersion() + " \u2014 " + r.getTitle(),
+                        r.getStatus().name(),
+                        r.getId(),
+                        r.getCreatedAt()
+                ))
+                .collect(Collectors.toList());
+
+        List<ActivityItem> combined = new ArrayList<>();
+        combined.addAll(deploymentItems);
+        combined.addAll(releaseItems);
+        combined.sort((a, b) -> b.getTimestamp().compareTo(a.getTimestamp()));
+        return combined.stream().limit(20).collect(Collectors.toList());
     }
 
     private DeploymentResponse toResponse(Deployment d) {

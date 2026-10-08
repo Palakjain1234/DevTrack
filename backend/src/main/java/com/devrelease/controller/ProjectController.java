@@ -1,7 +1,9 @@
 package com.devrelease.controller;
 
 import com.devrelease.dto.request.ProjectRequest;
+import com.devrelease.dto.response.ActivityItem;
 import com.devrelease.dto.response.ProjectResponse;
+import com.devrelease.service.DeploymentService;
 import com.devrelease.service.ProjectService;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
@@ -16,9 +18,11 @@ import java.util.List;
 public class ProjectController {
 
     private final ProjectService projectService;
+    private final DeploymentService deploymentService;
 
-    public ProjectController(ProjectService projectService) {
+    public ProjectController(ProjectService projectService, DeploymentService deploymentService) {
         this.projectService = projectService;
+        this.deploymentService = deploymentService;
     }
 
     @PostMapping
@@ -61,5 +65,10 @@ public class ProjectController {
     public ResponseEntity<ProjectResponse> removeMember(@PathVariable Long id, @PathVariable Long userId,
                                                          @AuthenticationPrincipal UserDetails user) {
         return ResponseEntity.ok(projectService.removeMember(id, userId, user.getUsername()));
+    }
+
+    @GetMapping("/{id}/activity")
+    public ResponseEntity<List<ActivityItem>> getActivity(@PathVariable Long id) {
+        return ResponseEntity.ok(deploymentService.getActivityFeed(id));
     }
 }

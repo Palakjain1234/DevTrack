@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
-import { getProject, deleteProject, addMember, removeMember } from '../api/projects'
+import { getProject, deleteProject, addMember, removeMember, getProjectActivity } from '../api/projects'
 import { getReleases, createRelease } from '../api/releases'
 import { getEnvironments, createEnvironment, deleteEnvironment } from '../api/environments'
 import { searchUserByEmail } from '../api/users'
@@ -15,6 +15,8 @@ export default function ProjectDetailPage() {
   const [project, setProject] = useState(null)
   const [releases, setReleases] = useState([])
   const [environments, setEnvironments] = useState([])
+
+  const [activity, setActivity] = useState([])
 
   // Release modal
   const [isReleaseModal, setReleaseModal] = useState(false)
@@ -39,6 +41,7 @@ export default function ProjectDetailPage() {
     getProject(id).then(res => setProject(res.data))
     getReleases(id).then(res => setReleases(res.data))
     getEnvironments(id).then(res => setEnvironments(res.data))
+    getProjectActivity(id).then(res => setActivity(res.data)).catch(() => setActivity([]))
   }
   useEffect(() => { load() }, [id])
 
@@ -188,7 +191,44 @@ export default function ProjectDetailPage() {
             data={releases}
             onRowClick={(row) => navigate(`/projects/${id}/releases/${row.id}`)}
           />
+      </div>
+
+        {/* Activity Feed */}
+        <div>
+          <div className="flex justify-between items-end mb-4">
+            <h2 className="label-caps">RECENT ACTIVITY</h2>
+          </div>
+          {activity.length === 0
+            ? <p className="editorial text-muted">No activity yet.</p>
+            : (
+              <div className="flex flex-col gap-0" style={{ borderTop: 'var(--border)' }}>
+                {activity.map((item, idx) => (
+                  <div
+                    key={idx}
+                    className="flex justify-between items-center"
+                    style={{ padding: 'var(--space-3) 0', borderBottom: 'var(--border-light)', cursor: 'pointer' }}
+                    onClick={() => {
+                      if (item.type === 'DEPLOYMENT') navigate(`/deployments/${item.referenceId}`)
+                      else navigate(`/projects/${id}/releases/${item.referenceId}`)
+                    }}
+                  >
+                    <div className="flex gap-4 items-center">
+                      <span className="label-caps" style={{ fontSize: '10px', opacity: 0.5, minWidth: '80px' }}>{item.type}</span>
+                      <span className="editorial">{item.message}</span>
+                    </div>
+                    <div className="flex gap-4 items-center">
+                      <StatusBadge status={item.status} />
+                      <span className="mono text-muted" style={{ fontSize: '11px' }}>
+                        {new Date(item.timestamp).toLocaleString()}
+                      </span>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )
+          }
         </div>
+
       </div>
 
       {/* New Release Modal */}
