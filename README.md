@@ -1,139 +1,222 @@
 # DevTrack — Release & Deployment Management Platform
 
-A release pipeline tracker for software teams — manage projects, environments, releases, and deployments end-to-end from a single dashboard.
+DevTrack is a full-stack web application built to simplify how software teams manage their release and deployment workflows. It provides a centralized platform where teams can track projects, configure environments, manage releases, and monitor deployments — all from a single dashboard.
 
-<br/>
+---
 
-## Features
+## 🚀 Features
 
-- **Projects** — create projects, invite team members, manage access
-- **Environments** — configure DEV, STAGING, and PRODUCTION targets per project
-- **Releases** — version and track releases through their full lifecycle (`PLANNED → IN_PROGRESS → DEPLOYED → ROLLED_BACK`)
-- **Deployments** — trigger deployments to specific environments, track status and logs in real time
-- **Notifications** — automatic in-app alerts for every release and deployment event
-- **Dashboard** — live stats: total projects, releases, deployments today, and success rate
-- **Activity Feed** — per-project timeline of recent deployments and releases
-- **Scheduled Releases** — set a target date when creating a release
-- **JWT Auth** — stateless authentication with role-based access (ADMIN / DEVELOPER)
-- **Swagger UI** — full API documentation at `/swagger-ui.html`
+### Project Management
+- Create and manage software projects
+- Add and remove project members
+- View all releases and deployments scoped to each project
 
-<br/>
+### Release Management
+- Create versioned releases with title, description, and status
+- Set optional scheduled release dates
+- Track release lifecycle from `PLANNED` → `IN_PROGRESS` → `DEPLOYED` → `ROLLED_BACK`
+- Roll back deployed releases when needed
 
-## Tech Stack
+### Environment Management
+- Configure multiple deployment targets per project
+- Supports `DEV`, `STAGING`, and `PRODUCTION` environments
+- Track which deployments ran on each environment
 
-| Layer | Technology |
-|---|---|
-| Backend | Java 21, Spring Boot 3.2, Spring Security, JPA/Hibernate |
-| Frontend | React 18, Vite, React Router, Axios |
-| Database | MySQL 8 |
-| Auth | JWT (JJWT 0.11) |
-| API Docs | SpringDoc OpenAPI / Swagger UI |
-| Infra | Docker, Docker Compose, Nginx |
+### Deployment Management
+- Trigger deployments by targeting a release and an environment
+- Monitor deployment status in real time (`RUNNING` → `SUCCESS` / `FAILED`)
+- View deployment logs and history per release
+- Simulate deployment outcomes for testing
 
-<br/>
+### Dashboard & Activity
+- Role-scoped stats: total projects, releases, deployments today, success rate
+- Per-project activity feed combining recent releases and deployments into a timeline
+- Global deployments view across all projects
 
-## Getting Started
+### Authentication & Notifications
+- JWT-based stateless authentication
+- Role-based access control (`ADMIN` / `DEVELOPER`)
+- Automatic in-app notifications for deployment triggers, successes, failures, and rollbacks
 
-### Prerequisites
+---
 
-- [Docker](https://www.docker.com/) and Docker Compose
-
-### Run locally
-
-```bash
-git clone https://github.com/Palakjain1234/DevTrack.git
-cd DevTrack
-docker-compose up --build
-```
-
-Open **http://localhost** in your browser.
-
-A default admin account is seeded automatically:
+## 🔄 Application Flow
 
 ```
-Email:    admin@devrelease.io
-Password: Admin@123
+           PROJECT
+              │
+              ▼
+  CONFIGURE ENVIRONMENTS
+              │
+              ▼
+       CREATE RELEASE
+              │
+              ▼
+     TRIGGER DEPLOYMENT
+              │
+              ▼
+     TRACK DEPLOYMENT STATUS
+              │
+              ▼
+   DASHBOARD & ACTIVITY FEED
 ```
 
-<br/>
+> A project can have multiple releases. Each release can be deployed to multiple environments independently.
 
-## Usage Flow
+---
+
+## 🏗️ Architecture
 
 ```
-Create Project → Add Environments → Create Release → Trigger Deployment
+              ┌──────────────────────┐
+              │    React Frontend     │
+              │    Vite + Axios       │
+              └──────────┬───────────┘
+                         │
+                      REST API
+                         │
+                         ▼
+              ┌──────────────────────┐
+              │   Spring Boot API    │
+              │   Business Logic     │
+              └──────────┬───────────┘
+                         │
+           ┌─────────────┴─────────────┐
+           │                           │
+           ▼                           ▼
+   Spring Security              JPA / Hibernate
+           │                           │
+           ▼                           ▼
+          JWT                      MySQL 8
 ```
 
-1. **Create a project** from the Projects page
-2. **Add environments** (DEV / STAGING / PRODUCTION) inside the project
-3. **Create a release** with a version number, title, and optional scheduled date
-4. **Trigger a deployment** — pick a target environment from the release page
-5. **Update deployment status** (Success / Failed) from the deployment detail page
-6. **Monitor** everything from the Dashboard and Activity Feed
+---
 
-<br/>
+## 🛠️ Technology Stack
 
-## API Reference
+**Frontend**
+- React 18
+- Vite
+- React Router v6
+- Axios
 
-Full interactive API docs available at:
+**Backend**
+- Java 21
+- Spring Boot 3.2
+- Spring Security
+- Spring Data JPA / Hibernate
+- REST APIs
+
+**Database**
+- MySQL 8
+
+**API Documentation**
+- Swagger / OpenAPI (SpringDoc)
+
+**Infrastructure**
+- Docker
+- Docker Compose
+- Nginx
+
+---
+
+## 📂 Project Structure
+
+```
+DevTrack/
+│
+├── backend/
+│   ├── src/main/java/com/devrelease/
+│   │   ├── controller/        # REST controllers
+│   │   ├── service/           # Business logic
+│   │   ├── repository/        # Spring Data repositories
+│   │   ├── model/             # JPA entities
+│   │   ├── dto/               # Request & response DTOs
+│   │   ├── security/          # JWT filter & utilities
+│   │   └── enums/             # Status and type enums
+│   └── Dockerfile
+│
+├── frontend/
+│   ├── src/
+│   │   ├── pages/             # Route-level page components
+│   │   ├── components/        # Shared UI components
+│   │   ├── api/               # Axios API modules
+│   │   └── context/           # Auth & notification context
+│   ├── nginx.conf
+│   └── Dockerfile
+│
+├── docker-compose.yml
+└── README.md
+```
+
+---
+
+## 🔐 Security
+
+DevTrack uses Spring Security with JWT-based authentication. All API endpoints except `/api/auth/**` require a valid bearer token.
+
+Users are assigned one of two roles at registration:
+
+| Role | Access |
+|------|--------|
+| `ADMIN` | Global access — sees all projects, releases, deployments, and stats |
+| `DEVELOPER` | Scoped access — sees only projects they own or are a member of |
+
+---
+
+## 📡 API Documentation
+
+The backend exposes RESTful APIs for all core domains. Explore and test them via Swagger UI:
 
 ```
 http://localhost:8081/swagger-ui.html
 ```
 
-Key endpoints:
+Available API groups:
 
-```
-POST   /api/auth/register
-POST   /api/auth/login
+- `POST /api/auth/register` — Register a new account
+- `POST /api/auth/login` — Login and receive a JWT
+- `/api/projects` — Project CRUD + member management + activity feed
+- `/api/projects/{id}/environments` — Environment management
+- `/api/projects/{id}/releases` — Release management + status updates
+- `/api/deployments` — Trigger and track deployments
+- `/api/notifications` — In-app notification inbox
+- `/api/dashboard/stats` — Role-scoped dashboard statistics
 
-GET    /api/projects
-POST   /api/projects
-POST   /api/projects/{id}/members/{userId}
-GET    /api/projects/{id}/activity
+---
 
-GET    /api/projects/{projectId}/environments
-POST   /api/projects/{projectId}/environments
+## 🐳 Running with Docker
 
-GET    /api/projects/{projectId}/releases
-POST   /api/projects/{projectId}/releases
-PATCH  /api/projects/{projectId}/releases/{id}/status
+**Prerequisites:** [Docker Desktop](https://www.docker.com/products/docker-desktop/) installed and running.
 
-POST   /api/deployments
-PATCH  /api/deployments/{id}/status
-
-GET    /api/dashboard/stats
-GET    /api/notifications
+**Clone the repository**
+```bash
+git clone https://github.com/Palakjain1234/DevTrack.git
+cd DevTrack
 ```
 
-<br/>
-
-## Project Structure
-
-```
-DevTrack/
-├── backend/                  # Spring Boot API
-│   ├── src/main/java/com/devrelease/
-│   │   ├── controller/       # REST controllers
-│   │   ├── service/          # Business logic
-│   │   ├── model/            # JPA entities
-│   │   ├── repository/       # Spring Data repositories
-│   │   ├── dto/              # Request / Response DTOs
-│   │   ├── security/         # JWT filter & utilities
-│   │   └── enums/            # Status enums
-│   └── Dockerfile
-├── frontend/                 # React + Vite SPA
-│   ├── src/
-│   │   ├── pages/            # Route-level page components
-│   │   ├── components/       # Shared UI components
-│   │   ├── api/              # Axios API modules
-│   │   └── context/          # Auth & notification context
-│   ├── nginx.conf
-│   └── Dockerfile
-└── docker-compose.yml
+**Build and start all services**
+```bash
+docker-compose up --build
 ```
 
-<br/>
+Once running, open **http://localhost** in your browser.
 
-## License
+A default admin account is created automatically on first run:
+```
+Email:    admin@devrelease.io
+Password: Admin@123
+```
 
-MIT
+**Stop the application**
+```bash
+docker-compose down
+```
+
+---
+
+## 🎯 Project Objective
+
+DevTrack was built to make software release management more organized and transparent. Instead of tracking releases across Slack threads, spreadsheets, or emails, teams get a single platform that shows exactly what is being released, where it is being deployed, and the current status of every deployment.
+
+The platform brings together project management, environment configuration, release tracking, deployment monitoring, role-based access, notifications, and activity tracking into one cohesive full-stack application.
