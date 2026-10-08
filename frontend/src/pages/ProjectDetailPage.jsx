@@ -21,6 +21,7 @@ export default function ProjectDetailPage() {
   const [version, setVersion] = useState('')
   const [title, setTitle] = useState('')
   const [releaseDesc, setReleaseDesc] = useState('')
+  const [scheduledAt, setScheduledAt] = useState('')
 
   // Environment modal
   const [isEnvModal, setEnvModal] = useState(false)
@@ -43,9 +44,14 @@ export default function ProjectDetailPage() {
 
   const handleCreateRelease = async (e) => {
     e.preventDefault()
-    await createRelease(id, { version, title, description: releaseDesc })
+    await createRelease(id, {
+      version,
+      title,
+      description: releaseDesc,
+      scheduledAt: scheduledAt ? new Date(scheduledAt).toISOString().slice(0, 19) : null,
+    })
     setReleaseModal(false)
-    setVersion(''); setTitle(''); setReleaseDesc('')
+    setVersion(''); setTitle(''); setReleaseDesc(''); setScheduledAt('')
     load()
   }
 
@@ -176,6 +182,7 @@ export default function ProjectDetailPage() {
               { header: 'VERSION', accessor: 'version' },
               { header: 'TITLE', accessor: 'title' },
               { header: 'STATUS', render: row => <StatusBadge status={row.status} /> },
+              { header: 'SCHEDULED', render: row => row.scheduledAt ? new Date(row.scheduledAt).toLocaleDateString() : '—' },
               { header: 'CREATED', render: row => new Date(row.createdAt).toLocaleDateString() },
             ]}
             data={releases}
@@ -198,6 +205,16 @@ export default function ProjectDetailPage() {
           <div className="flex flex-col gap-1">
             <label className="label-caps">Description</label>
             <textarea placeholder="What's in this release?" className="border-ink" style={{ padding: '8px', backgroundColor: 'transparent', minHeight: '80px' }} value={releaseDesc} onChange={e => setReleaseDesc(e.target.value)} />
+          </div>
+          <div className="flex flex-col gap-1">
+            <label className="label-caps">Scheduled Date (optional)</label>
+            <input
+              type="datetime-local"
+              className="border-ink"
+              style={{ padding: '8px', backgroundColor: 'transparent' }}
+              value={scheduledAt}
+              onChange={e => setScheduledAt(e.target.value)}
+            />
           </div>
           <Button type="submit">CREATE RELEASE</Button>
         </form>

@@ -69,6 +69,11 @@ export default function ReleaseDetailPage() {
           <div className="label-caps mb-2">RELEASE {release.version}</div>
           <h1 style={{ fontSize: '2.5rem', lineHeight: 1 }}>{release.title}</h1>
           {release.description && <p className="editorial text-muted" style={{ marginTop: '8px' }}>{release.description}</p>}
+          {release.scheduledAt && (
+            <p className="mono text-muted" style={{ marginTop: '6px', fontSize: '12px' }}>
+              SCHEDULED: {new Date(release.scheduledAt).toLocaleString()}
+            </p>
+          )}
         </div>
         <div className="flex gap-3 items-center">
           <StatusBadge status={release.status} />

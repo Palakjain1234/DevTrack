@@ -49,6 +49,7 @@ public class ReleaseService {
         release.setVersion(request.getVersion());
         release.setTitle(request.getTitle());
         release.setDescription(request.getDescription());
+        release.setScheduledAt(request.getScheduledAt());
         release.setStatus(ReleaseStatus.PLANNED);
         release.setProject(project);
         release.setCreatedBy(creator);
@@ -102,6 +103,7 @@ public class ReleaseService {
         resp.setStatus(r.getStatus());
         resp.setProjectId(r.getProject().getId());
         resp.setCreatedById(r.getCreatedBy().getId());
+        resp.setScheduledAt(r.getScheduledAt());
         resp.setCreatedAt(r.getCreatedAt());
         resp.setUpdatedAt(r.getUpdatedAt());
         return resp;

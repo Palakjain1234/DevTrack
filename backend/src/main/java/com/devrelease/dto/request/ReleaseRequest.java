@@ -2,6 +2,7 @@ package com.devrelease.dto.request;
 
 import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
+import java.time.LocalDateTime;
 
 @Data
 public class ReleaseRequest {
@@ -12,4 +13,6 @@ public class ReleaseRequest {
     private String title;
 
     private String description;
+
+    private LocalDateTime scheduledAt;
 }

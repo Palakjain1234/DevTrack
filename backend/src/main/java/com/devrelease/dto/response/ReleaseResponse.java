@@ -13,6 +13,7 @@ public class ReleaseResponse {
     private ReleaseStatus status;
     private Long projectId;
     private Long createdById;
+    private LocalDateTime scheduledAt;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 }
