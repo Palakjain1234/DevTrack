@@ -1,0 +1,84 @@
+/* ═══════════════════════════════════════════════
+   DEVRELEASE — Utility Classes
+═══════════════════════════════════════════════ */
+
+/* Typography */
+.label-caps {
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.4em;
+  text-transform: uppercase;
+  color: var(--color-muted);
+}
+
+.editorial {
+  font-family: var(--font-editorial);
+  font-style: italic;
+}
+
+.mono {
+  font-family: var(--font-mono);
+  font-size: 13px;
+}
+
+.text-muted { color: var(--color-muted); }
+.text-accent { color: var(--color-accent); }
+.text-ink    { color: var(--color-ink); }
+
+/* Borders */
+.border-ink   { border: var(--border); }
+.border-light { border: var(--border-light); }
+
+/* Status Badges */
+.status-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  padding: 3px 8px;
+  border: 1px solid currentColor;
+}
+
+.status-success   { color: var(--color-success); }
+.status-failed    { color: var(--color-accent); }
+.status-pending   { color: var(--color-muted); }
+.status-running   { color: var(--color-ink); }
+.status-deployed  { color: var(--color-success); }
+.status-rolled-back { color: var(--color-accent); }
+.status-planned   { color: var(--color-muted); }
+.status-in-progress { color: var(--color-warning); }
+
+/* Pulse dot */
+.pulse-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: currentColor;
+  animation: pulse 1.5s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50%       { opacity: 0.4; transform: scale(0.7); }
+}
+
+/* Layout helpers */
+.flex       { display: flex; }
+.flex-col   { flex-direction: column; }
+.items-center { align-items: center; }
+.justify-between { justify-content: space-between; }
+.gap-2  { gap: var(--space-2); }
+.gap-4  { gap: var(--space-4); }
+.gap-6  { gap: var(--space-6); }
+
+/* Unread indicator */
+.unread-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--color-accent);
+  flex-shrink: 0;
+}

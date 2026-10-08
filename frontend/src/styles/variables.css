@@ -1,0 +1,48 @@
+/* ═══════════════════════════════════════════════
+   DEVRELEASE — Design System Tokens
+   Paper & Ink Aesthetic
+═══════════════════════════════════════════════ */
+
+:root {
+  /* Palette */
+  --color-paper:   #F8F7F2;
+  --color-ink:     #1A1A1A;
+  --color-accent:  #E84545;
+  --color-muted:   #6B6B6B;
+  --color-surface: #EFEDE6;
+  --color-surface-2: #E8E6DF;
+  --color-success: #2D8A4E;
+  --color-warning: #D97706;
+
+  /* Typography */
+  --font-display:   'Inter', sans-serif;
+  --font-editorial: Georgia, 'Times New Roman', serif;
+  --font-mono:      'JetBrains Mono', 'Fira Mono', monospace;
+
+  /* Borders */
+  --border:        1px solid #1A1A1A;
+  --border-light:  1px solid #D4D2CA;
+  --border-muted:  1px solid #C5C3BB;
+
+  /* Spacing (8px base grid) */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-6: 24px;
+  --space-8: 32px;
+  --space-12: 48px;
+  --space-16: 64px;
+
+  /* Radii — editorial uses sharp corners by default */
+  --radius-sm: 2px;
+  --radius-md: 4px;
+
+  /* Transitions */
+  --transition: 150ms ease;
+  --transition-slow: 300ms ease;
+
+  /* Shadows */
+  --shadow-sm: 2px 2px 0 #1A1A1A;
+  --shadow-md: 4px 4px 0 #1A1A1A;
+}

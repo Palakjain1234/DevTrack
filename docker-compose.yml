@@ -1,0 +1,45 @@
+version: '3.8'
+
+services:
+  mysql:
+    image: mysql:8.0
+    container_name: devrelease-mysql
+    environment:
+      MYSQL_DATABASE: devrelease_db
+      MYSQL_ROOT_PASSWORD: rootpassword
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-prootpassword"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 30s
+
+  backend:
+    build: ./backend
+    container_name: devrelease-backend
+    environment:
+      DB_USERNAME: root
+      DB_PASSWORD: rootpassword
+      JWT_SECRET: c2VjcmV0LWtleS1mb3ItZGV2cmVsZWFzZS1wbGVhc2UtY2hhbmdlLWluLXByb2Q=
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/devrelease_db?allowPublicKeyRetrieval=true&useSSL=false
+    ports:
+      - "8080:8080"
+    depends_on:
+      mysql:
+        condition: service_healthy
+    restart: on-failure
+
+  frontend:
+    build: ./frontend
+    container_name: devrelease-frontend
+    ports:
+      - "80:80"
+    depends_on:
+      - backend
+
+volumes:
+  mysql_data:
