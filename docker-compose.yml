@@ -3,12 +3,10 @@ version: '3.8'
 services:
   mysql:
     image: mysql:8.0
-    container_name: devrelease-mysql
+    container_name: devtrack-mysql
     environment:
       MYSQL_DATABASE: devrelease_db
       MYSQL_ROOT_PASSWORD: rootpassword
-    ports:
-      - "3306:3306"
     volumes:
       - mysql_data:/var/lib/mysql
     healthcheck:
@@ -20,22 +18,25 @@ services:
 
   backend:
     build: ./backend
-    container_name: devrelease-backend
+    container_name: devtrack-backend
     environment:
       DB_USERNAME: root
       DB_PASSWORD: rootpassword
       JWT_SECRET: c2VjcmV0LWtleS1mb3ItZGV2cmVsZWFzZS1wbGVhc2UtY2hhbmdlLWluLXByb2Q=
       SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/devrelease_db?allowPublicKeyRetrieval=true&useSSL=false
     ports:
-      - "8080:8080"
+      - "8081:8080"
     depends_on:
       mysql:
         condition: service_healthy
     restart: on-failure
 
   frontend:
-    build: ./frontend
-    container_name: devrelease-frontend
+    build:
+      context: ./frontend
+      args:
+        VITE_API_BASE_URL: /api
+    container_name: devtrack-frontend
     ports:
       - "80:80"
     depends_on:

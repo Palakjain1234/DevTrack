@@ -15,7 +15,7 @@ public class OpenApiConfig {
     public OpenAPI customOpenAPI() {
         final String securitySchemeName = "bearerAuth";
         return new OpenAPI()
-                .info(new Info().title("DevRelease API").version("1.0").description("API for DevRelease Pipeline"))
+                .info(new Info().title("DevTrack API").version("1.0").description("API for DevTrack — Release & Deployment Management Platform"))
                 .addSecurityItem(new SecurityRequirement().addList(securitySchemeName))
                 .components(new Components()
                         .addSecuritySchemes(securitySchemeName,

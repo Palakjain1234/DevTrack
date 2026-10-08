@@ -10,7 +10,7 @@ export default function TopBar() {
 
   return (
     <header className="flex justify-between items-center border-ink" style={{ padding: 'var(--space-3) var(--space-6)', borderBottom: 'var(--border)' }}>
-      <div className="editorial" style={{ fontSize: '18px' }}>DevRelease Tracker</div>
+      <div className="editorial" style={{ fontSize: '18px' }}>DevTrack</div>
       <div className="flex items-center gap-6">
         <div style={{ position: 'relative', cursor: 'pointer' }} onClick={() => navigate('/notifications')}>
           <Bell size={20} className="text-ink" />

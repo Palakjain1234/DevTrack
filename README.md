@@ -1,4 +1,4 @@
-# DevRelease
+# DevTrack — Release & Deployment Management Platform
 
 A release pipeline tracker for software teams — manage projects, environments, releases, and deployments end-to-end from a single dashboard.
 
@@ -12,6 +12,8 @@ A release pipeline tracker for software teams — manage projects, environments,
 - **Deployments** — trigger deployments to specific environments, track status and logs in real time
 - **Notifications** — automatic in-app alerts for every release and deployment event
 - **Dashboard** — live stats: total projects, releases, deployments today, and success rate
+- **Activity Feed** — per-project timeline of recent deployments and releases
+- **Scheduled Releases** — set a target date when creating a release
 - **JWT Auth** — stateless authentication with role-based access (ADMIN / DEVELOPER)
 - **Swagger UI** — full API documentation at `/swagger-ui.html`
 
@@ -39,9 +41,9 @@ A release pipeline tracker for software teams — manage projects, environments,
 ### Run locally
 
 ```bash
-git clone https://github.com/YOUR_USERNAME/devrelease.git
-cd devrelease
-docker-compose up --build -d
+git clone https://github.com/Palakjain1234/DevTrack.git
+cd DevTrack
+docker-compose up --build
 ```
 
 Open **http://localhost** in your browser.
@@ -61,12 +63,12 @@ Password: Admin@123
 Create Project → Add Environments → Create Release → Trigger Deployment
 ```
 
-1. **Create a project** from the Source Vault page
+1. **Create a project** from the Projects page
 2. **Add environments** (DEV / STAGING / PRODUCTION) inside the project
-3. **Create a release** with a version number and title
+3. **Create a release** with a version number, title, and optional scheduled date
 4. **Trigger a deployment** — pick a target environment from the release page
 5. **Update deployment status** (Success / Failed) from the deployment detail page
-6. **Monitor** everything from the Dashboard
+6. **Monitor** everything from the Dashboard and Activity Feed
 
 <br/>
 
@@ -75,7 +77,7 @@ Create Project → Add Environments → Create Release → Trigger Deployment
 Full interactive API docs available at:
 
 ```
-http://localhost:8080/swagger-ui.html
+http://localhost:8081/swagger-ui.html
 ```
 
 Key endpoints:
@@ -87,6 +89,7 @@ POST   /api/auth/login
 GET    /api/projects
 POST   /api/projects
 POST   /api/projects/{id}/members/{userId}
+GET    /api/projects/{id}/activity
 
 GET    /api/projects/{projectId}/environments
 POST   /api/projects/{projectId}/environments
@@ -107,7 +110,7 @@ GET    /api/notifications
 ## Project Structure
 
 ```
-devrelease/
+DevTrack/
 ├── backend/                  # Spring Boot API
 │   ├── src/main/java/com/devrelease/
 │   │   ├── controller/       # REST controllers

@@ -14,8 +14,8 @@
     <groupId>com.devrelease</groupId>
     <artifactId>devrelease</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>devrelease</name>
-    <description>DevRelease — Release Pipeline Tracker API</description>
+    <name>devtrack</name>
+    <description>DevTrack — Release &amp; Deployment Management Platform</description>
 
     <properties>
         <java.version>21</java.version>
